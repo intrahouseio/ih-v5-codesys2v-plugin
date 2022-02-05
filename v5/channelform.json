@@ -1,0 +1,74 @@
+{
+  "grid": [
+    { "id": "p1", "xs": 6, "class": "main", "table": "devhard" },
+    { "id": "p2", "xs": 6, "class": "main", "table": "devhard" },
+    { "id": "p9", "xs": 12, "class": "main", "table": "onechannelrtTable", "hide": "!data.p2.r" }
+  ],
+  "spacing": 4,
+
+  "p1": [
+    { "prop": "chan", "title": "Channel ID", "type": "text" },
+    { "prop": "title", "title": "$Name", "type": "input" },
+    { "prop": "devpropname", "title": "Свойство устройства при автоматической привязке", "type": "input" },
+    {
+      "prop": "vartype",
+      "title": "Vartype",
+      "type": "droplist",
+      "data": [
+        {
+          "id": "bool",
+          "title": "BOOL"
+        },
+
+        {
+          "id": "int8",
+          "title": "INT8, 1 байт"
+        },
+
+        {
+          "id": "uint8",
+          "title": "BYTE, 1 байт"
+        },
+
+        {
+          "id": "int16",
+          "title": "INT16, 2 байта"
+        },
+
+        {
+          "id": "uint16",
+          "title": "WORD, 2 байта"
+        },
+
+        {
+          "id": "int32",
+          "title": "INT32, 4 байта"
+        },
+
+        {
+          "id": "uint32",
+          "title": "DWORD, 4 байта"
+        },
+
+        {
+          "id": "float",
+          "title": "REAL, 4 байта"
+        }
+      ],
+
+      "default": "int16"
+    },
+    { "prop": "offset", "title": "Offset", "type": "number"},
+    { "prop": "refId", "title": "RefID", "type": "number"},
+    { "prop": "size", "title": "Size", "type": "number"}
+  ],
+
+  "p2": [
+    { "prop": "r", "title": "$Read", "type": "cb" },
+    { "prop": "w", "title": "$Write", "type": "cb" }
+  ],
+  "p9": [
+    { "prop": "realtime_chan_str", "title": "Канал", "type": "text" },
+    { "prop": "realtime_dev_str", "title": "Устройство", "type": "text" }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "codesys2v",
+  "module": "index.js",
+  "single": 0,
+  "comment":"Это файл-манифест. Содержит настройки, команды плагина. ",
+  
+
+  "channel_folder_popup": {
+    "add": [
+      { "id": "channel_folder", "title": "$NewFolder" },
+      { "id": "channel", "title": "$Channel" }
+    ],
+    "copypaste": true,
+    "delete": true
+  },
+  "default_channel": {
+    "r": 1,
+    "chan": "ch1",
+    "offset": 144,
+    "refId": 4,
+    "vartype": "float",
+    "size": 4
+  }
+}

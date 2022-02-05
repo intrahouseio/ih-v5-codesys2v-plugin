@@ -1,0 +1,29 @@
+{
+  "grid": [{ "id": "p1", "xs": 12, "class": "main", "table": "unitchannelsTable", "height": "fill" }],
+  "spacing": 10,
+
+  "p1": [
+    {
+      "title": "Channels",
+      "type": "table",
+      "prop": "unitchannelsTable",
+
+      "columns": [
+        { "prop": "chan", "title": "$Channel", "type": "link", "command": "forward", "width": 250 },
+        { "prop": "desc", "title": "", "type": "text", "width": 50 },
+        { "prop": "did", "title": "$Device", "type": "link", "command": "forward", "width": 250 },
+        { "prop": "prop", "title": "$DeviceProperty", "type": "text", "width": 64 },
+        { "prop": "redId", "title": "RefId", "type": "text", "width": 64 },
+        { "prop": "offset", "title": "Offset", "type": "text", "width": 64 },
+        { "prop": "size", "title": "Size", "type": "text", "width": 64 },
+        { "prop": "vartype", "title": "VarType", "type": "text", "width": 64 },
+        { "prop": "realtime_chan_val", "title": "Канал: значение", "type": "text", "width": 64 },
+        { "prop": "realtime_chan_ts", "title": "Канал: время", "type": "text", "width": 150 },
+        { "prop": "realtime_dev_val", "title": "Устройство: значение", "type": "text", "width": 64 },
+        { "prop": "realtime_dev_ts", "title": "Устройство: время", "type": "text", "width": 150 },
+        { "prop": "realtime_dev_cts", "title": "Изменение", "type": "text", "width": 150 },
+        { "prop": "realtime_dev_err", "title": "Ошибка", "type": "text", "width": 150 }
+      ]
+    }
+  ]
+}
