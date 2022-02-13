@@ -9,20 +9,27 @@
  let variables = {};
  
  module.exports = {
+   dataLength: 12, 
    conn: {},
    sendReadMsg: {},
    sendwriteMsg:{},
 
    init(plugin) {
      this.plugin = plugin;
-     this.plugin.channels.data = this.plugin.channels.data.filter(item => item.refId && item.offset);
-     //this.plugin.log("data ch: " + util.inspect(plugin.channels.data))
-     this.addItems(this.plugin.channels);
 
+     this.addItems(this.plugin.channels);
+     this.dataLength = 12;
+     for (const channel of this.plugin.channels.data) {
+      if (channel.r == 1) {
+        this.dataLength += channel.size + 1;
+      }
+     }
+     this.plugin.log("dataLength: " + this.dataLength, 2)
    },
  
    addItems(channels) {
      this.sendReadMsg = parser.reqReadHex(channels);
+     this.plugin.log("SendMSG: " + this.sendReadMsg.toString('hex'), 2)
    },
  
    removeItems() {
@@ -71,10 +78,18 @@
    readAll() {
     return new Promise((resolve) => {
         this.conn.write(this.sendReadMsg);
-        let ch = this.plugin.channels;
+        let dataLength = this.dataLength;
+        let channels = this.plugin.channels;
+        let bufdata = Buffer.alloc(0);
         this.conn.on('data', function getData (data) {
-         this.removeListener('data', getData);
-         resolve(parser.resReadHex(ch, data));
+         if (bufdata.length + data.length < dataLength) {
+          bufdata = Buffer.concat([bufdata, data], bufdata.length + data.length);
+         } else {
+          this.removeListener('data', getData);
+          bufdata = Buffer.concat([bufdata, data], bufdata.length + data.length);
+          resolve(parser.resReadHex(channels, bufdata));
+         }
+         
          if (data.toString().endsWith('exit')) {
             this.conn.destroy();
          }
