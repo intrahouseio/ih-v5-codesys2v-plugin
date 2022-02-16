@@ -16,47 +16,51 @@
       "type": "droplist",
       "data": [
         {
-          "id": "bool",
+          "id": "BOOL",
           "title": "BOOL"
         },
 
         {
-          "id": "int8",
-          "title": "INT8, 1 байт"
+          "id": "SINT",
+          "title": "SINT, 1 байт"
         },
 
         {
-          "id": "uint8",
+          "id": "BYTE",
           "title": "BYTE, 1 байт"
         },
 
         {
-          "id": "int16",
-          "title": "INT16, 2 байта"
+          "id": "INT",
+          "title": "INT, 2 байта"
         },
 
         {
-          "id": "uint16",
+          "id": "WORD",
           "title": "WORD, 2 байта"
         },
 
         {
-          "id": "int32",
-          "title": "INT32, 4 байта"
+          "id": "DINT",
+          "title": "DINT, 4 байта"
         },
 
         {
-          "id": "uint32",
+          "id": "DWORD",
           "title": "DWORD, 4 байта"
         },
 
         {
-          "id": "float",
+          "id": "REAL",
           "title": "REAL, 4 байта"
+        },
+        {
+          "id": "STRING",
+          "title": "STRING, 4 байта"
         }
       ],
 
-      "default": "int16"
+      "default": "INT"
     },
     { "prop": "offset", "title": "Offset", "type": "number"},
     { "prop": "refId", "title": "RefID", "type": "number"},

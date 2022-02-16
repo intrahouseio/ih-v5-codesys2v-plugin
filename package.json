@@ -1,0 +1,25 @@
+{
+  "name": "codesys2v",
+  "version": "1.0.0",
+  "description": "## Плагин для опроса контроллеров, которые программируются в среде Codesys 2.3 Для получения информации по RefID, Offset, Size, Type необходимо сформировать символьный файл в Codesys",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intrahouseio/ih-v5-codesys2v-plugin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/intrahouseio/ih-v5-codesys2v-plugin/issues"
+  },
+  "homepage": "https://github.com/intrahouseio/ih-v5-codesys2v-plugin#readme",
+  "dependencies": {
+    "iconv-lite": "^0.6.3"
+  }
+}
