@@ -87,6 +87,7 @@
          } else {
           this.removeListener('data', getData);
           bufdata = Buffer.concat([bufdata, data], bufdata.length + data.length);
+          //resolve(bufdata.toString('hex'));
           resolve(parser.resReadHex(channels, bufdata));
          }
          

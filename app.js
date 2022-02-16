@@ -89,10 +89,12 @@ module.exports = async function(plugin) {
   *   (возможно накопление нескольких команд при ожидании окончания предыдущей операции)
   */
   async function write() {
-    try {    
-      await client.write(toWrite);
-      plugin.log('Write completed' + util.inspect(toWrite), 1);
-      toWrite = [];
+    try {
+      let datawrite = toWrite.slice();  
+      toWrite = [];  
+      await client.write(datawrite);
+      plugin.log('Write completed' + util.inspect(datawrite), 1);
+      
     } catch (e) {
       plugin.log('Write ERROR: ' + util.inspect(e));
     }
@@ -115,8 +117,8 @@ module.exports = async function(plugin) {
     // Попытаться отправить на контроллер
     // Сбросить таймер поллинга, чтобы не случилось наложения
     clearTimeout(nextTimer);
-    nextTimer = setTimeout(sendNext, 20); 
-    //sendNext();
+    //nextTimer = setTimeout(sendNext, 20); 
+    sendNext();
   });
 
    // При изменении каналов, recs = {Array of Objects}

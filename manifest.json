@@ -3,7 +3,16 @@
   "module": "index.js",
   "single": 0,
   "comment":"Это файл-манифест. Содержит настройки, команды плагина. ",
-  
+
+  "plugin_popup": [
+    {
+      "id": "import_xml",
+      "type": "item",
+      "title": "Загрузить каналы из .SYM файла",
+      "command": "upload",
+      "param": "plugin_command:uploadXml"
+    }
+  ],
 
   "channel_folder_popup": {
     "add": [
