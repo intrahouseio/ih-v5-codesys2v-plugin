@@ -76,7 +76,7 @@ module.exports = async function(plugin) {
             cnt ++;
           }
         }
-        plugin.sendData(res);
+        if (res.length>0) plugin.sendData(res);
       }
     } catch (e) {
       plugin.log('Read error: ' + util.inspect(e));
@@ -92,6 +92,12 @@ module.exports = async function(plugin) {
     try {
       let datawrite = toWrite.slice();  
       toWrite = [];  
+      datawrite.map(item => {
+        if (item.writeValue) {
+          item.value = item.writeValue;
+        }
+        return item
+      })
       await client.write(datawrite);
       plugin.log('Write completed' + util.inspect(datawrite), 1);
       
@@ -117,7 +123,6 @@ module.exports = async function(plugin) {
     // Попытаться отправить на контроллер
     // Сбросить таймер поллинга, чтобы не случилось наложения
     clearTimeout(nextTimer);
-    //nextTimer = setTimeout(sendNext, 20); 
     sendNext();
   });
 

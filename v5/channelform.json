@@ -69,7 +69,18 @@
 
   "p2": [
     { "prop": "r", "title": "$Read", "type": "cb" },
-    { "prop": "w", "title": "$Write", "type": "cb" }
+    { "prop": "w", "title": "$Write", "type": "cb" },
+    { "prop": "writeValue", "title": "Данные для записи в контроллер", "type": "input", "hide": "!data.p2.w" },
+    { "prop": "header_testwrite", "title": "Тест записи", "type": "header", "hide": "!data.p2.w" },
+    { "prop": "testValue", "title": "Записать значение", "type": "input", "hide": "!data.p2.w" },
+    {
+      "prop": "writeButton",
+      "title": "$doWrite",
+      "type": "button",
+      "command": "writetochannel",
+      "param": "write",
+      "hide": "!data.p2.w"
+    }
   ],
   "p9": [
     { "prop": "realtime_chan_str", "title": "Канал", "type": "text" },
