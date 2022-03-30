@@ -92,12 +92,6 @@ module.exports = async function(plugin) {
     try {
       let datawrite = toWrite.slice();  
       toWrite = [];  
-      datawrite.map(item => {
-        if (item.writeValue) {
-          item.value = item.writeValue;
-        }
-        return item
-      })
       await client.write(datawrite);
       plugin.log('Write completed' + util.inspect(datawrite), 1);
       

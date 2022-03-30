@@ -69,8 +69,9 @@
 
   "p2": [
     { "prop": "r", "title": "$Read", "type": "cb" },
+    { "prop": "calc", "title": "$Devhard_Calc", "type": "input", "hide": "!data.p2.r" },
     { "prop": "w", "title": "$Write", "type": "cb" },
-    { "prop": "writeValue", "title": "Данные для записи в контроллер", "type": "input", "hide": "!data.p2.w" },
+    { "prop": "calc_out", "title": "$Devhard_Calc_Out", "type": "input", "hide": "!data.p2.w" },
     { "prop": "header_testwrite", "title": "Тест записи", "type": "header", "hide": "!data.p2.w" },
     { "prop": "testValue", "title": "Записать значение", "type": "input", "hide": "!data.p2.w" },
     {
