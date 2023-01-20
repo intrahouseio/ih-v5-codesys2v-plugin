@@ -5,7 +5,7 @@
 const util = require('util');
 const client = require('./client');
 
-module.exports = async function(plugin) {
+module.exports = async function (plugin) {
   const pooldelay = plugin.params.data.pooldelay || 1000;
   //let channels = await plugin.channels.get();
   //await sendChannels(); // Отправить каналы на старте
@@ -13,8 +13,9 @@ module.exports = async function(plugin) {
   let nextTimer; // таймер поллинга
   let waiting;   // Флаг ожидания завершения операции (содержит ts старта операции или 0)
   let toWrite = []; // Массив команд на запись
-  let variables = {};
+  let readMessages = [];
   let nextDelay;
+  let curValues = {};
 
   (async () => {
     plugin.log('Plugin codesys2v has started.', 0);
@@ -26,7 +27,7 @@ module.exports = async function(plugin) {
       plugin.channels.data = await plugin.channels.get();
       plugin.log('Received channels data: ' + util.inspect(plugin.channels.data), 1);
 
-      client.init(plugin);
+      readMessages = client.init(plugin);
       await client.connect();
       plugin.log('Connected!');
       sendNext();
@@ -41,7 +42,7 @@ module.exports = async function(plugin) {
       nextTimer = setTimeout(sendNext, 100); // min interval?
       return;
     }
-  
+
     nextDelay = pooldelay; // стандартный интервал опроса
     waiting = Date.now();
     if (toWrite.length) {
@@ -51,35 +52,35 @@ module.exports = async function(plugin) {
       await read();
     }
     waiting = 0;
-    nextTimer = setTimeout(sendNext, nextDelay); 
+    nextTimer = setTimeout(sendNext, nextDelay);
   }
 
-   /*  read
-  *   Отправляет команду чтения на контроллер, ожидает результат
-  *   Преобразует результат и отправляет данные на сервер {id, value}
-  *
-  */
+  /*  read
+ *   Отправляет команду чтения на контроллер, ожидает результат
+ *   Преобразует результат и отправляет данные на сервер {id, value}
+ *
+ */
   async function read() {
-    try {
-      const data = await client.readAll();
-      //plugin.log("data: " + data);
-      if (data) {
-        let res = [];
-        let cnt = 0;
-        //plugin.log('Read from PLC: ' + util.inspect(data), 2);
-        for (let i = 0; i < plugin.channels.data.length; i++ ) {
-          if (plugin.channels.data[i].r == 1) {
-            if (plugin.channels.data[i].value != data[cnt]) {
-              plugin.channels.data[i].value = data[cnt];
-              res.push({id: plugin.channels.data[i].id, value: data[cnt]});
+    for (let i = 0; i < readMessages.length; i++) {
+      try {
+        const data = await client.readAll(readMessages[i]);
+        //plugin.log("data: " + data);
+        if (data) {
+          let res = [];
+          let cnt = 0;
+          //plugin.log('Read from PLC: ' + i, 2);
+          readMessages[i].channels.forEach(item => {
+            if (curValues[item.id] != data[cnt]) {
+              curValues[item.id] = data[cnt];
+              res.push({ id: item.id, value: data[cnt] });
             }
-            cnt ++;
-          }
+            cnt++;
+          })
+          if (res.length > 0) plugin.sendData(res);
         }
-        if (res.length>0) plugin.sendData(res);
+      } catch (e) {
+        plugin.log('Read error: ' + util.inspect(e));
       }
-    } catch (e) {
-      plugin.log('Read error: ' + util.inspect(e));
     }
   }
 
@@ -90,11 +91,11 @@ module.exports = async function(plugin) {
   */
   async function write() {
     try {
-      let datawrite = toWrite.slice();  
-      toWrite = [];  
+      let datawrite = toWrite.slice();
+      toWrite = [];
       await client.write(datawrite);
       plugin.log('Write completed' + util.inspect(datawrite), 1);
-      
+
     } catch (e) {
       plugin.log('Write ERROR: ' + util.inspect(e));
     }
@@ -109,7 +110,7 @@ module.exports = async function(plugin) {
   plugin.onAct(message => {
     //console.log('Write recieve', message);
     plugin.log('ACT data=' + util.inspect(message.data));
-    
+
     if (!message.data) return;
     message.data.forEach(item => {
       toWrite.push(item);
@@ -120,11 +121,12 @@ module.exports = async function(plugin) {
     sendNext();
   });
 
-   // При изменении каналов, recs = {Array of Objects}
-   plugin.onChange('channels', async (recs) => {
-    plugin.log('onChange Channels '+ util.inspect(recs), 1);
+  // При изменении каналов, recs = {Array of Objects}
+  plugin.onChange('channels', async (recs) => {
+    plugin.log('onChange Channels ' + util.inspect(recs), 1);
     plugin.channels.data = await plugin.channels.get();
-    client.init(plugin);
+    curValues = {};
+    readMessages = client.init(plugin);
     /*recs.forEach(rec => {
       if (rec.op == 'add') {
         plugin.log('onChange addChannels '+ util.inspect(recs), 1);

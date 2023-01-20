@@ -11,25 +11,17 @@
  module.exports = {
    dataLength: 12, 
    conn: {},
-   sendReadMsg: {},
    sendwriteMsg:{},
 
    init(plugin) {
      this.plugin = plugin;
-
-     this.addItems(this.plugin.channels);
-     this.dataLength = 12;
-     for (const channel of this.plugin.channels.data) {
-      if (channel.r == 1) {
-        this.dataLength += channel.size + 1;
-      }
-     }
-     this.plugin.log("dataLength: " + this.dataLength, 2)
+     return this.addItems(this.plugin.channels);
    },
  
    addItems(channels) {
-     this.sendReadMsg = parser.reqReadHex(channels);
-     this.plugin.log("SendMSG: " + this.sendReadMsg.toString('hex'), 2)
+     const sendReadMsgs = parser.reqReadHex(channels);
+     this.plugin.log("SendMSGlength: " + sendReadMsgs.length, 2);
+     return sendReadMsgs;
    },
  
    removeItems() {
@@ -75,11 +67,11 @@
      });    
    },
  
-   readAll() {
+   readAll(sendReadMsg) {
     return new Promise((resolve) => {
-        this.conn.write(this.sendReadMsg);
-        let dataLength = this.dataLength;
-        let channels = this.plugin.channels;
+        this.conn.write(sendReadMsg.buf);
+        let dataLength = sendReadMsg.datalength;
+        let channels = sendReadMsg.channels;
         let bufdata = Buffer.alloc(0);
         this.conn.on('data', function getData (data) {
          if (bufdata.length + data.length < dataLength) {
