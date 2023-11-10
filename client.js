@@ -39,18 +39,18 @@
      const host = this.plugin.params.data.host;
      const port = Number(this.plugin.params.data.port);
  
-     this.plugin.log('Try connect to ' + host + ':' + port);
+     this.plugin.log('Try connect to ' + host + ':' + port, 1);
 
      return new Promise((resolve, reject) => {
         this.conn = net.createConnection({ host, port }, (err) => {
             
             this.conn.on('end', () => {
-                this.plugin.exit(1, 'disconnected');
+                this.plugin.exit(2, 'disconnected');
             });
           
              this.conn.on('error', e => {
                 this.conn.end();
-                this.plugin.exit(1, 'Connection error:  '  + e.code);
+                this.plugin.exit(3, 'Connection error:  '  + e.code);
             });
           
             /*this.conn.on('data', data => {
@@ -68,25 +68,31 @@
    },
  
    readAll(sendReadMsg) {
-    return new Promise((resolve) => {
-        this.conn.write(sendReadMsg.buf);
+    return new Promise((resolve, reject) => {
+        const timerId = setTimeout(resTimeout.bind(this), this.plugin.params.data.timeout);
+        this.conn.write(sendReadMsg.buf);         
         let dataLength = sendReadMsg.datalength;
         let channels = sendReadMsg.channels;
         let bufdata = Buffer.alloc(0);
+        //const self = this.plugin;
         this.conn.on('data', function getData (data) {
+         clearTimeout(timerId);
          if (bufdata.length + data.length < dataLength) {
           bufdata = Buffer.concat([bufdata, data], bufdata.length + data.length);
          } else {
           this.removeListener('data', getData);
           bufdata = Buffer.concat([bufdata, data], bufdata.length + data.length);
-          //resolve(bufdata.toString('hex'));
+          //self.log(bufdata.toString('hex'));
           resolve(parser.resReadHex(channels, bufdata));
-         }
-         
-         if (data.toString().endsWith('exit')) {
+         }         
+         /*if (data.toString().endsWith('exit')) {
             this.conn.destroy();
-         }
-        }); 
+         }*/
+        });
+        function resTimeout() {
+          this.plugin.log("Timeout");
+          reject({ message: 'Timeout: ' + this.plugin.params.data.timeout });
+        } 
        });
    },
  

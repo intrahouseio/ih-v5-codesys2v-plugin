@@ -61,27 +61,33 @@ module.exports = async function (plugin) {
  *
  */
   async function read() {
+    let res = [];
+    let errcnt = 0;
     for (let i = 0; i < readMessages.length; i++) {
       try {
         const data = await client.readAll(readMessages[i]);
-        //plugin.log("data: " + data);
-        if (data) {
-          let res = [];
+        //plugin.log("data: " + data);      
+        if (data) {          
           let cnt = 0;
           //plugin.log('Read from PLC: ' + i, 2);
           readMessages[i].channels.forEach(item => {
             if (curValues[item.id] != data[cnt]) {
               curValues[item.id] = data[cnt];
-              res.push({ id: item.id, value: data[cnt] });
+              res.push({ id: item.id, value: data[cnt], chstatus: 0 });
             }
             cnt++;
           })
-          if (res.length > 0) plugin.sendData(res);
         }
       } catch (e) {
-        plugin.log('Read error: ' + util.inspect(e));
-      }
+        plugin.log('Read error: ' + util.inspect(e.message), 1);
+        readMessages[i].channels.forEach(item => {
+          res.push({ id: item.id, chstatus: 1});
+        })
+        errcnt++;
+      }        
     }
+    if (res.length > 0) plugin.sendData(res);
+    if (errcnt == readMessages.length) plugin.exit(8, 'Read error');
   }
 
   /*  write

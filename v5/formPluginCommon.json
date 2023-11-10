@@ -21,7 +21,14 @@
       "type": "input",
       "default": "2455"
     },
+    {
+      "prop": "timeout",
+      "title": "$timeout",
+      "default": 5000,
+      "type": "number"
+    },
     { "prop": "pooldelay", "title": "Период опроса", "type": "number", "default": 1000 }
+
   ],
 
   "p2": [
