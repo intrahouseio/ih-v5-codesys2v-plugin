@@ -24,7 +24,10 @@
           "id": "SINT",
           "title": "SINT, 1 байт"
         },
-
+        {
+          "id": "USINT",
+          "title": "USINT, 1 байт"
+        },
         {
           "id": "BYTE",
           "title": "BYTE, 1 байт"
@@ -34,7 +37,10 @@
           "id": "INT",
           "title": "INT, 2 байта"
         },
-
+        {
+          "id": "UINT",
+          "title": "UINT, 2 байта"
+        },
         {
           "id": "WORD",
           "title": "WORD, 2 байта"
@@ -44,7 +50,10 @@
           "id": "DINT",
           "title": "DINT, 4 байта"
         },
-
+        {
+          "id": "UDINT",
+          "title": "UDINT, 4 байта"
+        },
         {
           "id": "DWORD",
           "title": "DWORD, 4 байта"
